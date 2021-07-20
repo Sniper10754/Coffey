@@ -1,7 +1,5 @@
 plugins {
-
     java
-
 }
 
 allprojects {

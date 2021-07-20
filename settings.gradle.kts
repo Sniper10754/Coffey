@@ -9,7 +9,7 @@
 
 rootProject.name = "Coffey"
 include(
-    "app"
+    "app",
+    "library",
+    "library:core"
 )
-include("library")
-include("library:core")

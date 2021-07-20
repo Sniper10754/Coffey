@@ -27,6 +27,9 @@ class Entry {
         if (args.size >= 1) {
             val status = CoffeyShell.eval(args)
 
+            if (status == (CoffeyShell.Companion.ERROR_CODES.NO_ERROR.stat)) {
+                manager.println("Command exit with process code: $status")
+            }
         } else {
             CoffeyShell.eval(arrayOf("help"))
         }
