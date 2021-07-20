@@ -18,6 +18,6 @@ dependencies {
 
 tasks.shadowJar {
     manifest {
-        attributes["Main-Class"] = "org.caffey.app.App"
+        attributes["Main-Class"] = "org.coffey.app.App"
     }
 }
