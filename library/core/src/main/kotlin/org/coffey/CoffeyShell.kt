@@ -1,17 +1,19 @@
 package org.coffey
 
 class CoffeyShell {
-    companion object {
-        enum class ERROR_CODES(status: Int) {
-            NO_ERROR(0),
-            FEW_ARGUMENTS(1),
-            TOO_MUCH_ARGUMENTS(2),
-            COMMAND_NOT_FOUND(3),
-            COMMAND_ERROR(4);
 
-            var stat = status
-                get() = field
-        }
+    enum class ERROR_CODES(status: Int) {
+        NO_ERROR(0),
+        FEW_ARGUMENTS(1),
+        TOO_MUCH_ARGUMENTS(2),
+        COMMAND_NOT_FOUND(3),
+        COMMAND_ERROR(4);
+
+        var code = status
+            get() = field
+    }
+
+    companion object {
 
         fun eval(args: Array<String>): Int {
 
@@ -23,7 +25,7 @@ class CoffeyShell {
                     return command.run(mutableArgs.toTypedArray())
                 }
             }
-            return ERROR_CODES.COMMAND_NOT_FOUND.stat
+            return ERROR_CODES.COMMAND_NOT_FOUND.code
         }
     }
 }

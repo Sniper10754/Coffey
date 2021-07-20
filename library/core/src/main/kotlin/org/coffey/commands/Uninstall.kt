@@ -30,7 +30,7 @@ class Uninstall : Command {
             }
         }
 
-        return CoffeyShell.Companion.ERROR_CODES.NO_ERROR.stat
+        return CoffeyShell.ERROR_CODES.NO_ERROR.code
     }
 
     override fun getDescription(): String {

@@ -14,6 +14,7 @@ import org.coffey.commands.Install.PathProvider
 import org.coffey.json.CoffeyPackage
 import org.coffey.utils.Utils
 import java.io.File
+import java.io.FileOutputStream
 import java.io.IOException
 import java.net.URL
 
@@ -58,13 +59,13 @@ class Install : Command {
             } catch (e: IOException) {
                 manager.println("Failed to read ${Properties.jsonPackage}, cannot install package")
 
-                return CoffeyShell.Companion.ERROR_CODES.COMMAND_ERROR.stat
+                return CoffeyShell.ERROR_CODES.COMMAND_ERROR.code
             } catch (e: KlaxonException) {
 
                 manager.println("Failed to parse ${Properties.jsonPackage}, cannot install package")
                 manager.println(e.localizedMessage)
 
-                return CoffeyShell.Companion.ERROR_CODES.COMMAND_ERROR.stat
+                return CoffeyShell.ERROR_CODES.COMMAND_ERROR.code
             }
 
             // Get installer
@@ -90,6 +91,38 @@ class Install : Command {
 
                 manager.println("Download complete. \n")
 
+                manager.println("Creating ${Properties.jsonPackage} manifest...")
+
+                try {
+                    val manifest = File("${installerDir.absolutePath}/package.json")
+
+                    manifest.createNewFile()
+
+                    val manifestJson = """
+                    {
+                        "name": "${coffeyPack.name}",
+                        "version": ${coffeyPack.version},
+                        "description": "${coffeyPack.description}",
+                        
+                        "WindowsInstaller": "${coffeyPack.WindowsInstaller}",
+                        "LinuxInstaller": "${coffeyPack.LinuxInstaller}"
+                    }
+                    """.trimIndent()
+
+                    var outputStream = FileOutputStream(manifest)
+
+                    outputStream.write(manifestJson.toByteArray())
+
+                    manager.println("Creation of manifest completed.")
+
+                } catch (e: IOException) {
+                    manager.println("Exception was thrown during creation of manifest, ignoring it.")
+                    manager.println(e)
+                    return CoffeyShell.ERROR_CODES.COMMAND_ERROR.code
+                }
+
+
+
                 manager.println("Executing $installerFile...")
 
                 try {
@@ -114,15 +147,18 @@ class Install : Command {
                     manager.println("Failed to execute installer")
                     manager.println("Error: $e")
                     manager.println("path: ${installerFile.absolutePath}")
+                    return CoffeyShell.ERROR_CODES.COMMAND_ERROR.code
                 }
 
             } catch (e: IOException) {
                 manager.println("During the download was raised an exception")
                 manager.println(e)
+
+                return CoffeyShell.ERROR_CODES.COMMAND_ERROR.code
             }
         }
 
-        return CoffeyShell.Companion.ERROR_CODES.NO_ERROR.stat
+        return CoffeyShell.ERROR_CODES.NO_ERROR.code
     }
 
     override fun getDescription(): String {
