@@ -1,5 +1,6 @@
 package org.coffey.commands
 
+import org.apache.commons.io.FileUtils
 import org.coffey.CoffeyShell
 import org.coffey.Command
 import org.coffey.Properties
@@ -19,7 +20,7 @@ class Uninstall : Command {
                     if (dir.name == pack) {
                         if (dir.isDirectory) {
                             manager.println("Deleting: ${dir.absolutePath}")
-
+                            FileUtils.deleteDirectory(dir)
                             manager.println("Deleted: ${dir.absolutePath}")
                         }
                     }

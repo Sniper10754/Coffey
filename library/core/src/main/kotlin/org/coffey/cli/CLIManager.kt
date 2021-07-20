@@ -7,7 +7,7 @@ class CLIManager(clazz: Class<Any>) {
         kotlin.io.print(obj.toString())
     }
 
-    fun println(obj: Any) {
-        kotlin.io.println("[${boundClazz.simpleName}] ${obj.toString()}")
+    fun println(obj: Any = "") {
+        kotlin.io.println("[${boundClazz.simpleName}] $obj")
     }
 }
