@@ -1,13 +1,37 @@
 package org.coffey.commands
 
+import org.coffey.CoffeyShell
 import org.coffey.Command
+import org.coffey.Properties
+import org.coffey.cli.CLIManager
+import java.io.File
+import java.io.IOException
 
 class Uninstall : Command {
+    val manager = CLIManager(javaClass)
+
     override fun run(args: Array<String>): Int {
-        TODO("Not yet implemented")
+        val installingDir = File(System.getenv()[Properties.installationEnvVar])
+
+        for (pack in args) {
+            try {
+                for (dir in installingDir.listFiles()) {
+                    if (dir.name == pack) {
+                        if (dir.isDirectory) {
+                            manager.println("Deleting: ${dir.absolutePath}")
+                        }
+                    }
+                }
+            } catch (e: IOException) {
+                manager.println("During the uninstall was thrown an exception")
+                manager.println(e.localizedMessage)
+            }
+        }
+
+        return CoffeyShell.Companion.ERROR_CODES.NO_ERROR.stat
     }
 
     override fun getDescription(): String {
-        TODO("Not yet implemented")
+        return "Uninstall a series of packages, Usage: uninstall <List of packages>"
     }
 }

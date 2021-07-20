@@ -29,7 +29,6 @@ class Entry {
 
         } else {
             CoffeyShell.eval(arrayOf("help"))
-            manager.println("Too few arguments")
         }
 
         return 0
