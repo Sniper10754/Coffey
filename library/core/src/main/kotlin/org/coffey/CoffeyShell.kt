@@ -6,7 +6,8 @@ class CoffeyShell {
             NO_ERROR(0),
             FEW_ARGUMENTS(1),
             TOO_MUCH_ARGUMENTS(2),
-            COMMAND_NOT_FOUND(3);
+            COMMAND_NOT_FOUND(3),
+            COMMAND_ERROR(4);
 
             var stat = status
                 get() = field

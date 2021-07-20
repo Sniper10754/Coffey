@@ -1,6 +1,5 @@
 package org.coffey.commands
 
-import com.beust.klaxon.JsonParsingException
 import com.beust.klaxon.Klaxon
 import com.beust.klaxon.KlaxonException
 import org.apache.http.client.methods.HttpGet
@@ -11,6 +10,7 @@ import org.coffey.CoffeyShell
 import org.coffey.Command
 import org.coffey.Properties
 import org.coffey.cli.CLIManager
+import org.coffey.commands.Install.PathProvider
 import org.coffey.json.CoffeyPackage
 import org.coffey.utils.Utils
 import java.io.File
@@ -19,29 +19,35 @@ import java.net.URL
 
 
 class Install : Command {
-    var manager = CLIManager(javaClass)
-    var useRepository = true
+    fun interface PathProvider {
+        fun providePath(pack: String): String
+    }
+
+    var provider = PathProvider {
+        "${Properties.repositoryUrl}/${it.toCharArray()[0]}/$it"
+    }
+        get() = field
+        set(value) {
+            field = value
+        }
+
+    private var manager = CLIManager(javaClass)
 
     override fun run(args: Array<String>): Int {
         for (pack in args) {
-            val packInitial: Char = pack.toCharArray()[0]
-            var packageUrl: String
+            val packageUrl = provider.providePath(pack)
             val installerDir = File("${System.getenv(Properties.installationEnvVar)}/${pack}")
-            var installerName: String
+            var installerName: File
             val client: CloseableHttpClient? = HttpClientBuilder.create().build()
             var coffeyPack: CoffeyPackage
 
-            if (useRepository) {
-                packageUrl = "${Properties.repositoryUrl}/$packInitial/$pack"
-            } else {
-                packageUrl = "${Properties.repositoryUrl}/$pack"
-            }
-
+            // Get the coffeyPackage manifest.
             val request = HttpGet("$packageUrl/${Properties.jsonPackage}")
 
             manager.println("Reading ${Properties.jsonPackage}...")
+
             try {
-                var response = client?.execute(request)
+                val response = client?.execute(request)
 
                 if (response?.statusLine?.statusCode == 404) {
                     throw IOException()
@@ -52,24 +58,30 @@ class Install : Command {
             } catch (e: IOException) {
                 manager.println("Failed to read ${Properties.jsonPackage}, cannot install package")
 
-                return CoffeyShell.Companion.ERROR_CODES.NO_ERROR.stat
+                return CoffeyShell.Companion.ERROR_CODES.COMMAND_ERROR.stat
             } catch (e: KlaxonException) {
+
                 manager.println("Failed to parse ${Properties.jsonPackage}, cannot install package")
                 manager.println(e.localizedMessage)
-                return CoffeyShell.Companion.ERROR_CODES.NO_ERROR.stat
+
+                return CoffeyShell.Companion.ERROR_CODES.COMMAND_ERROR.stat
             }
 
+            // Get installer
+
+            manager.println("Installing ${coffeyPack.name} ${coffeyPack.version}")
+
             if ((System.getProperty("os.name").lowercase()).contains("windows")) {
-                installerName = coffeyPack.WindowsInstaller
+                installerName = File(coffeyPack.WindowsInstaller)
             } else {
-                installerName = coffeyPack.LinuxInstaller
+                installerName = File(coffeyPack.LinuxInstaller)
             }
 
             val installerFile = File("${installerDir.absolutePath}/$installerName")
 
             val downloadURL = "${packageUrl}/$installerName"
 
-            manager.println("Downloading $installerFile from $downloadURL")
+            manager.println("Downloading ${installerFile.name} from $downloadURL")
             try {
                 Utils().downloadFromURL(
                     URL(downloadURL),
@@ -82,12 +94,13 @@ class Install : Command {
 
                 try {
 
+                    // Run installer
                     val builder = ProcessBuilder()
 
-                    if (installerName.lowercase().contains(".sh")) {
-                        builder.command("bash ", "-c ", installerName)
+                    if (installerName.name.lowercase().contains(".sh")) {
+                        builder.command("bash ", "-c ", installerName.name)
                     } else {
-                        builder.command("cmd ", "/c ", installerName)
+                        builder.command("cmd ", "/c ", installerName.name)
                     }
 
                     builder
