@@ -5,6 +5,7 @@
 plugins {
     kotlin("jvm") version "1.5.21"
     java
+    id("com.github.johnrengelman.shadow") version "7.0.0"
 }
 
 repositories {
@@ -15,3 +16,8 @@ dependencies {
     implementation(project(":library:core"))
 }
 
+tasks.shadowJar {
+    manifest {
+        attributes["Main-Class"] = "org.caffey.app.App"
+    }
+}
