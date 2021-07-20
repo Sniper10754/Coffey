@@ -94,7 +94,7 @@ class Install : Command {
                 manager.println("Creating ${Properties.jsonPackage} manifest...")
 
                 try {
-                    val manifest = File("${installerDir.absolutePath}/package.json")
+                    val manifest = File("${installerDir.absolutePath}/${Properties.jsonPackage}")
 
                     manifest.createNewFile()
 
