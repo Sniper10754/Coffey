@@ -26,6 +26,7 @@ class Entry {
         if (args.isNotEmpty()) {
             val status = CoffeyShell.eval(args)
 
+            println("")
             manager.println("Command exit with process code: $status")
 
         } else {

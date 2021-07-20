@@ -37,7 +37,7 @@ class Install : Command {
     override fun run(args: Array<String>): Int {
         for (pack in args) {
             val packageUrl = provider.providePath(pack)
-            val installerDir = File("${System.getenv(Properties.installationEnvVar)}/${pack}")
+            val installerDir = File("${System.getenv(Properties.installationEnvVar)}\\${pack}")
             var installerName: File
             val client: CloseableHttpClient? = HttpClientBuilder.create().build()
             var coffeyPack: CoffeyPackage
@@ -78,7 +78,7 @@ class Install : Command {
                 installerName = File(coffeyPack.LinuxInstaller)
             }
 
-            val installerFile = File("${installerDir.absolutePath}/$installerName")
+            val installerFile = File("${installerDir.absolutePath}\\$installerName")
 
             val downloadURL = "${packageUrl}/$installerName"
 
@@ -94,7 +94,7 @@ class Install : Command {
                 manager.println("Creating ${Properties.jsonPackage} manifest...")
 
                 try {
-                    val manifest = File("${installerDir.absolutePath}/${Properties.jsonPackage}")
+                    val manifest = File("${installerDir.absolutePath}\\${Properties.jsonPackage}")
 
                     manifest.createNewFile()
 

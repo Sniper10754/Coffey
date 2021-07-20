@@ -10,6 +10,6 @@ object Properties {
 
     var commands = listOf(
         Install(), Uninstall(),
-        Help()
+        Help(), PackageList()
     )
 }
