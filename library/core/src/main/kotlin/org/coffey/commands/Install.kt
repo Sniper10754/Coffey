@@ -15,18 +15,53 @@ class Install : Command {
     override fun run(args: Array<String>): Int {
         for (pack in args) {
             val packInitial: Char = pack.toCharArray()[0]
-            val downloadURL = "${Properties.repositoryUrl}/${packInitial}/${pack}/install.sh"
-            val installerName = "installer.sh"
+            var installerName: String
 
-            manager.println("Downloading $installerName from $downloadURL")
+            if ((System.getProperty("os.name").lowercase()).contains("windows")) {
+                installerName = "installer.cmd"
+            } else {
+                installerName = "installer.sh"
+            }
+
+            val installerDir = File("${System.getenv(Properties.installationEnvVar)}/${pack}")
+            val installerFile = File("${installerDir.absolutePath}/$installerName")
+            val downloadURL = "${Properties.repositoryUrl}/${packInitial}/${pack}/$installerName"
+
+            manager.println("Downloading $installerFile from $downloadURL")
             try {
                 Utils().downloadFromURL(
                     URL(downloadURL),
-                    File("${System.getenv(Properties.installationEnvVar)}/${pack}/$installerName")
+                    installerFile
                 )
+
+                manager.println("Download complete. \n")
+
+                manager.println("Executing $installerFile...")
+
+                try {
+
+                    val builder = ProcessBuilder()
+
+                    if (installerName.lowercase().contains(".sh")) {
+                        builder.command("bash ", "-c ", installerName)
+                    } else {
+                        builder.command("cmd ", "/c ", installerName)
+                    }
+
+                    builder
+                        .directory(installerDir)
+                        .inheritIO()
+
+                    builder.start()
+                } catch (e: IOException) {
+                    manager.println("Failed to execute installer")
+                    manager.println("Error: $e")
+                    manager.println("path: ${installerFile.absolutePath}")
+                }
+
             } catch (e: IOException) {
                 manager.println("During the download was raised an exception")
-                manager.println(e.localizedMessage)
+                manager.println(e)
             }
         }
 
