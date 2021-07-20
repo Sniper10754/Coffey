@@ -16,6 +16,11 @@ dependencies {
     implementation(project(":library:core"))
 }
 
+java {
+    sourceCompatibility = org.gradle.api.JavaVersion.VERSION_1_8
+    targetCompatibility = org.gradle.api.JavaVersion.VERSION_1_8
+}
+
 tasks.shadowJar {
     archiveBaseName.set("coffey")
     manifest {
