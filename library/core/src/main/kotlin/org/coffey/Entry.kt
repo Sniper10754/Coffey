@@ -1,7 +1,6 @@
 package org.coffey
 
 import org.coffey.cli.CLIManager
-import java.io.PrintStream
 import kotlin.system.exitProcess
 
 class Entry {
@@ -24,12 +23,11 @@ class Entry {
             exitProcess(1)
         }
 
-        if (args.size >= 1) {
+        if (args.isNotEmpty()) {
             val status = CoffeyShell.eval(args)
 
-            if (status == (CoffeyShell.Companion.ERROR_CODES.NO_ERROR.stat)) {
-                manager.println("Command exit with process code: $status")
-            }
+            manager.println("Command exit with process code: $status")
+
         } else {
             CoffeyShell.eval(arrayOf("help"))
         }
