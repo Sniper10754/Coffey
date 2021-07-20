@@ -9,7 +9,7 @@ class CoffeyShell {
             COMMAND_NOT_FOUND(3);
 
             var stat = status
-            get() = field
+                get() = field
         }
 
         fun eval(args: Array<String>): Int {
@@ -19,10 +19,7 @@ class CoffeyShell {
             for (command in Properties.commands) {
                 if (args[0].lowercase() == command.getName().lowercase()) {
                     mutableArgs.removeAt(0)
-                    Thread {
-                        command.run(mutableArgs.toTypedArray())
-                    }.start()
-                    return ERROR_CODES.NO_ERROR.stat
+                    return command.run(mutableArgs.toTypedArray())
                 }
             }
             return ERROR_CODES.COMMAND_NOT_FOUND.stat
