@@ -17,6 +17,7 @@ dependencies {
 }
 
 tasks.shadowJar {
+    archiveBaseName.set("coffey")
     manifest {
         attributes["Main-Class"] = "org.coffey.app.App"
     }
