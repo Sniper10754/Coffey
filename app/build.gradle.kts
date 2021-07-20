@@ -3,7 +3,7 @@
  */
 
 plugins {
-    kotlin("jvm") version "1.5.21"
+    kotlin("jvm")
     java
     id("com.github.johnrengelman.shadow") version "7.0.0"
 }
