@@ -19,10 +19,12 @@ class Uninstall : Command {
                     if (dir.name == pack) {
                         if (dir.isDirectory) {
                             manager.println("Deleting: ${dir.absolutePath}")
+
+                            manager.println("Deleted: ${dir.absolutePath}")
                         }
                     }
                 }
-            } catch (e: IOException) {
+            } catch (e: Throwable) {
                 manager.println("During the uninstall was thrown an exception")
                 manager.println(e.localizedMessage)
             }
