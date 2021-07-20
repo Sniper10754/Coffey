@@ -38,6 +38,6 @@ class PackageList : Command {
     }
 
     override fun getDescription(): String {
-        TODO("Not yet implemented")
+        return "Show all packages installed."
     }
 }
