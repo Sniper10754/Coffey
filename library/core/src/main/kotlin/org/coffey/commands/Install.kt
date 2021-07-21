@@ -68,7 +68,7 @@ class Install : Command {
                 return CoffeyShell.ERROR_CODES.COMMAND_ERROR.code
             }
 
-            // If the coffey ropository pack isn't here try to
+            // If the coffey repository pack isn't here try to
             // manually download executables.
 
             if (coffeyRepoPack == null) {
@@ -83,10 +83,10 @@ class Install : Command {
 
             manager.println("Installing ${coffeyRepoPack.name} ${coffeyRepoPack.version}")
 
-            if ((System.getProperty("os.name").lowercase()).contains("windows")) {
-                installerName = File(coffeyRepoPack.WindowsInstaller)
+            installerName = if ((System.getProperty("os.name").lowercase()).contains("windows")) {
+                File(coffeyRepoPack.WindowsInstaller)
             } else {
-                installerName = File(coffeyRepoPack.LinuxInstaller)
+                File(coffeyRepoPack.LinuxInstaller)
             }
 
             val installerFile = File("${installerDir.absolutePath}\\$installerName")
