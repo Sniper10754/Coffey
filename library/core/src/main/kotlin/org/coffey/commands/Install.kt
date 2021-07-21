@@ -1,7 +1,5 @@
 package org.coffey.commands
 
-import com.beust.klaxon.JsonArray
-import com.beust.klaxon.JsonObject
 import com.beust.klaxon.Klaxon
 import com.beust.klaxon.KlaxonException
 import org.apache.http.client.methods.HttpGet
@@ -97,12 +95,19 @@ class Install : Command {
 
             manager.println("Downloading ${installerFile.name} from $downloadURL")
             try {
-                Utils().downloadFromURL(
-                    URL(downloadURL),
-                    installerFile
-                )
+                try {
+                    Utils().downloadFromURL(
+                        URL(downloadURL),
+                        installerFile
+                    )
 
-                manager.println("Download complete.")
+                    manager.println("Download complete.")
+                } catch (e: IOException) {
+                    manager.println("Failed to download installer.")
+                    return CoffeyShell.ERROR_CODES.COMMAND_ERROR.code
+                }
+
+
 
                 manager.println("Creating ${Properties.jsonPackage} manifest...")
 
