@@ -103,8 +103,7 @@ class Install : Command {
 
                     manager.println("Download complete.")
                 } catch (e: IOException) {
-                    manager.println("Failed to download installer.")
-                    return CoffeyShell.ERROR_CODES.COMMAND_ERROR.code
+                    throw IOException("Failed to download installer.", e)
                 }
 
 
