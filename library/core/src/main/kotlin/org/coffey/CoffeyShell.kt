@@ -11,6 +11,10 @@ class CoffeyShell {
 
         var code = status
             get() = field
+
+        override fun toString(): String {
+            return "$code"
+        }
     }
 
     companion object {

@@ -8,8 +8,15 @@ object Properties {
     const val installationEnvVar = "COFFEY_PACKAGES"
     const val jsonPackage = "coffeypackage.json"
 
+    val packageList = PackageList()
+    val install = Install()
+    val uninstall = Uninstall()
+    val help = Help()
+
     var commands = listOf(
-        Install(), Uninstall(),
-        Help(), PackageList()
+        packageList,
+        install,
+        help,
+        uninstall
     )
 }

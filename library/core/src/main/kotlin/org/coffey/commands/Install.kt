@@ -41,7 +41,7 @@ class Install : Command {
             val installerDir = File("${System.getenv(Properties.installationEnvVar)}\\${pack}")
             var installerName: File
             val client: CloseableHttpClient? = HttpClientBuilder.create().build()
-            var coffeyRepoPack: CoffeyRepoPackage
+            var coffeyRepoPack: CoffeyRepoPackage? = null
 
             // Get the coffeyPackage manifest.
             val request = HttpGet("$packageUrl/${Properties.jsonPackage}")
@@ -58,18 +58,25 @@ class Install : Command {
                 coffeyRepoPack = Klaxon().parse<CoffeyRepoPackage>(EntityUtils.toString(response?.entity))!!
 
             } catch (e: IOException) {
-                manager.println("Failed to read ${Properties.jsonPackage}, cannot install package")
+                manager.println("Failed to read ${Properties.jsonPackage}, ignoring it.")
 
-                return CoffeyShell.ERROR_CODES.COMMAND_ERROR.code
             } catch (e: KlaxonException) {
 
-                manager.println("Failed to parse ${Properties.jsonPackage}, cannot install package")
+                manager.println("Failed to read/parse ${Properties.jsonPackage}, cannot install package")
                 manager.println(e.localizedMessage)
 
                 return CoffeyShell.ERROR_CODES.COMMAND_ERROR.code
             }
 
-            // Get installer
+            if (coffeyRepoPack == null) {
+                coffeyRepoPack = CoffeyRepoPackage(
+                    pack,
+                    0.0,
+                    "",
+                    "installer.exe",
+                    "installer.deb"
+                )
+            }
 
             manager.println("Installing ${coffeyRepoPack.name} ${coffeyRepoPack.version}")
 
@@ -104,8 +111,7 @@ class Install : Command {
 
                     manifest.createNewFile()
 
-
-                    var outputStream = FileOutputStream(manifest)
+                    val outputStream = FileOutputStream(manifest)
 
                     outputStream.write(coffeyPackage.toString().toByteArray())
 
@@ -126,7 +132,7 @@ class Install : Command {
                     // Run installer
                     val builder = ProcessBuilder()
 
-                    if (installerName.name.lowercase().contains(".sh")) {
+                    if (installerName.name.lowercase().contains(".deb")) {
                         builder.command("bash ", "-c ", installerName.name)
                     } else {
                         builder.command("cmd ", "/c ", installerName.name)
