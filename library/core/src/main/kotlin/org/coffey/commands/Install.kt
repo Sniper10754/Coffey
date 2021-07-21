@@ -12,6 +12,7 @@ import org.coffey.Properties
 import org.coffey.cli.CLIManager
 import org.coffey.commands.Install.PathProvider
 import org.coffey.json.CoffeyPackage
+import org.coffey.json.CoffeyRepoPackage
 import org.coffey.utils.Utils
 import java.io.File
 import java.io.FileOutputStream
@@ -40,7 +41,7 @@ class Install : Command {
             val installerDir = File("${System.getenv(Properties.installationEnvVar)}\\${pack}")
             var installerName: File
             val client: CloseableHttpClient? = HttpClientBuilder.create().build()
-            var coffeyPack: CoffeyPackage
+            var coffeyRepoPack: CoffeyRepoPackage
 
             // Get the coffeyPackage manifest.
             val request = HttpGet("$packageUrl/${Properties.jsonPackage}")
@@ -54,7 +55,7 @@ class Install : Command {
                     throw IOException()
                 }
 
-                coffeyPack = Klaxon().parse<CoffeyPackage>(EntityUtils.toString(response?.entity))!!
+                coffeyRepoPack = Klaxon().parse<CoffeyRepoPackage>(EntityUtils.toString(response?.entity))!!
 
             } catch (e: IOException) {
                 manager.println("Failed to read ${Properties.jsonPackage}, cannot install package")
@@ -70,12 +71,12 @@ class Install : Command {
 
             // Get installer
 
-            manager.println("Installing ${coffeyPack.name} ${coffeyPack.version}")
+            manager.println("Installing ${coffeyRepoPack.name} ${coffeyRepoPack.version}")
 
             if ((System.getProperty("os.name").lowercase()).contains("windows")) {
-                installerName = File(coffeyPack.WindowsInstaller)
+                installerName = File(coffeyRepoPack.WindowsInstaller)
             } else {
-                installerName = File(coffeyPack.LinuxInstaller)
+                installerName = File(coffeyRepoPack.LinuxInstaller)
             }
 
             val installerFile = File("${installerDir.absolutePath}\\$installerName")
@@ -95,23 +96,18 @@ class Install : Command {
 
                 try {
                     val manifest = File("${installerDir.absolutePath}\\${Properties.jsonPackage}")
+                    val coffeyPackage = CoffeyPackage(
+                        coffeyRepoPack.name,
+                        coffeyRepoPack.version,
+                        coffeyRepoPack.description
+                    )
 
                     manifest.createNewFile()
 
-                    val manifestJson = """
-                    {
-                        "name": "${coffeyPack.name}",
-                        "version": ${coffeyPack.version},
-                        "description": "${coffeyPack.description}",
-                        
-                        "WindowsInstaller": "${coffeyPack.WindowsInstaller}",
-                        "LinuxInstaller": "${coffeyPack.LinuxInstaller}"
-                    }
-                    """.trimIndent()
 
                     var outputStream = FileOutputStream(manifest)
 
-                    outputStream.write(manifestJson.toByteArray())
+                    outputStream.write(coffeyPackage.toString().toByteArray())
 
                     manager.println("Creation of manifest completed.")
 
