@@ -70,7 +70,8 @@ class Install : Command {
                 return CoffeyShell.ERROR_CODES.COMMAND_ERROR.code
             }
 
-
+            // If the coffey ropository pack isn't here try to
+            // manually download executables.
 
             if (coffeyRepoPack == null) {
                 coffeyRepoPack = CoffeyRepoPackage(
