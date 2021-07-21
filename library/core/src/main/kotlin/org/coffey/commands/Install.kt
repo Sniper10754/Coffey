@@ -77,9 +77,9 @@ class Install : Command {
                 coffeyRepoPack = CoffeyRepoPackage(
                     pack,
                     0.0,
-                    "",
-                    "installer.exe",
-                    "installer.deb"
+                    null,
+                    CoffeyRepoPackage.defaultWindowsInstaller,
+                    CoffeyRepoPackage.defaultLinuxInstaller
                 )
             }
 
@@ -111,7 +111,7 @@ class Install : Command {
                     val coffeyPackage = CoffeyPackage(
                         coffeyRepoPack.name,
                         coffeyRepoPack.version,
-                        coffeyRepoPack.description
+                        coffeyRepoPack.description.toString()
                     )
 
                     manifest.createNewFile()
