@@ -102,7 +102,7 @@ class Install : Command {
                     installerFile
                 )
 
-                manager.println("Download complete. \n")
+                manager.println("Download complete.")
 
                 manager.println("Creating ${Properties.jsonPackage} manifest...")
 
@@ -164,6 +164,8 @@ class Install : Command {
                 return CoffeyShell.ERROR_CODES.COMMAND_ERROR.code
             }
         }
+
+        manager.println("Package installed.")
 
         return CoffeyShell.ERROR_CODES.NO_ERROR.code
     }
