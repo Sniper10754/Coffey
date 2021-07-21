@@ -1,5 +1,7 @@
 package org.coffey.commands
 
+import com.beust.klaxon.JsonArray
+import com.beust.klaxon.JsonObject
 import com.beust.klaxon.Klaxon
 import com.beust.klaxon.KlaxonException
 import org.apache.http.client.methods.HttpGet
@@ -67,6 +69,8 @@ class Install : Command {
 
                 return CoffeyShell.ERROR_CODES.COMMAND_ERROR.code
             }
+
+
 
             if (coffeyRepoPack == null) {
                 coffeyRepoPack = CoffeyRepoPackage(

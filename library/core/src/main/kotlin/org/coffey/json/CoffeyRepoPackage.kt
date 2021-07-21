@@ -1,6 +1,8 @@
 package org.coffey.json
 
 import com.beust.klaxon.Json
+import com.beust.klaxon.JsonArray
+import com.beust.klaxon.JsonObject
 import com.beust.klaxon.Klaxon
 
 data class CoffeyRepoPackage(
