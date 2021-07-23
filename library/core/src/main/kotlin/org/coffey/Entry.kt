@@ -4,7 +4,7 @@ import org.coffey.cli.CLIManager
 import kotlin.system.exitProcess
 
 class Entry {
-    val manager = CLIManager(javaClass)
+    private val manager = CLIManager(javaClass)
 
     fun main(args: Array<String>): Int {
         val env = System.getenv()
@@ -14,7 +14,7 @@ class Entry {
 
         if ((installPath == null) or (coffeyHome == null)) {
             if (installPath == null) {
-                manager.println("Environment variable \"${Properties.installationEnvVar}\" is missing.")
+                env[Properties.installationEnvVar] = "${Properties.coffeyHome}\\packages"
             }
             if (coffeyHome == null) {
                 manager.println("Environment variable \"${Properties.coffeyHome}\" is missing.")
@@ -26,7 +26,7 @@ class Entry {
         if (args.isNotEmpty()) {
             val status = CoffeyShell.eval(args)
 
-            println("")
+            println()
             manager.println("Command exit with process code: $status")
 
         } else {
