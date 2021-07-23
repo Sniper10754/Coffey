@@ -9,7 +9,7 @@ data class CoffeyPackage(
         return """
 {
     "name": "$name",
-    "version": "$version",
+    "version": $version,
     "description": "$version"
 }
         """

@@ -5,6 +5,7 @@ import org.coffey.CoffeyShell
 import org.coffey.Command
 import org.coffey.Properties
 import org.coffey.cli.CLIManager
+import org.coffey.json.CoffeyPackage
 import org.coffey.json.CoffeyRepoPackage
 import java.io.File
 import java.lang.NullPointerException
@@ -20,7 +21,7 @@ class PackageList : Command {
                     val manifest = File("${dir.absolutePath}\\${Properties.jsonPackage}")
 
                     if (manifest.exists()) {
-                        val pack = Klaxon().parse<CoffeyRepoPackage>(manifest)
+                        val pack = Klaxon().parse<CoffeyPackage>(manifest)
 
                         manager.println("name: ${pack?.name} version: ${pack?.version}")
                         manager.println("Description: ${pack?.description}")
