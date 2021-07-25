@@ -7,11 +7,11 @@ data class CoffeyPackage(
 ) {
     override fun toString(): String {
         return """
-{
-    "name": "$name",
-    "version": $version,
-    "description": "$version"
-}
-        """
+            {
+                "name": "$name",
+                "version": $version,
+                "description": "$version"
+            }
+        """.trimIndent()
     }
 }
