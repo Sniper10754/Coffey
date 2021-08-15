@@ -15,6 +15,7 @@ object Properties {
 
     var commands = listOf(
         packageList, install,
-        help, uninstall
+        help, uninstall,
+        Info()
     )
 }

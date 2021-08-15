@@ -18,12 +18,13 @@ class CoffeyShell {
     }
 
     companion object {
+        fun commands(): List<Command> = Properties.commands
 
         fun eval(args: Array<String>): Int {
 
             val mutableArgs = args.toMutableList()
 
-            for (command in Properties.commands) {
+            for (command in commands()) {
                 if (args[0].lowercase() == command.getName().lowercase()) {
                     mutableArgs.removeAt(0)
                     return command.run(mutableArgs.toTypedArray())
