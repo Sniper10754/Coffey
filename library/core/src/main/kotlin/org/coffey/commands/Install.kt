@@ -28,10 +28,6 @@ class Install : Command {
     var provider = PathProvider {
         "${Properties.repositoryUrl}/${it.toCharArray()[0]}/$it"
     }
-        get() = field
-        set(value) {
-            field = value
-        }
 
     private var manager = CLIManager(javaClass)
 

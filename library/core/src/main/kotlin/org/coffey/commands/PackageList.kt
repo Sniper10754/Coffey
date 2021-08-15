@@ -6,9 +6,7 @@ import org.coffey.Command
 import org.coffey.Properties
 import org.coffey.cli.CLIManager
 import org.coffey.json.CoffeyPackage
-import org.coffey.json.CoffeyRepoPackage
 import java.io.File
-import java.lang.NullPointerException
 
 
 class PackageList : Command {

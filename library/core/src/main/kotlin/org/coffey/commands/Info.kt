@@ -27,7 +27,7 @@ Package: ${pack?.name}
             }
         }
 
-        return 0;
+        return 0
     }
 
     override fun getDescription() = "Get info of a specific package."

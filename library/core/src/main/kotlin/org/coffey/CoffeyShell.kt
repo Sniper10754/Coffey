@@ -10,7 +10,6 @@ class CoffeyShell {
         COMMAND_ERROR(4);
 
         var code = status
-            get() = field
 
         override fun toString(): String {
             return "$code"
