@@ -16,7 +16,7 @@ class Info : Command {
                 if (it.isDirectory) {
                     val coffeyPackageFile = File("${it.absolutePath}\\${Properties.jsonPackage}")
                     if (coffeyPackageFile.exists()) {
-                        var pack = Klaxon().parse<CoffeyPackage>(coffeyPackageFile)
+                        val pack = Klaxon().parse<CoffeyPackage>(coffeyPackageFile)
 
                         println("""
 Package: ${pack?.name}
